@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>アニメ作品を制作スタッフでクラスタリング</title>
+</head>
+
+<body>
+
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+</style>
+
+<select id="target" onChange="screenChange()">
+	<option value="1">クラスター1（ノード数：24、代表ノード：科学忍者隊ガッチャマン）</option>
+	<option value="2">クラスター2（ノード数：11、代表ノード：けいおん！）</option>
+	<option value="3">クラスター3（ノード数：10、代表ノード：ヴァンドレッド）</option>
+	<option value="4">クラスター4（ノード数：13、代表ノード：ああっ女神さまっ）</option>
+	<option value="5">クラスター5（ノード数：14、代表ノード：ネギま！）</option>
+	<option value="6">クラスター6（ノード数：44、代表ノード：ゲゲゲの鬼太郎）</option>
+	<option value="7">クラスター7（ノード数：8、代表ノード：NARUTO）</option>
+	<option value="8">クラスター8（ノード数：35、代表ノード：鋼の錬金術師）</option>
+	<option value="9">クラスター9（ノード数：12、代表ノード：BLOOD+）</option>
+	<option value="10">クラスター10（ノード数：29、代表ノード：天元突破グレンラガン）</option>
+	<option value="11">クラスター11（ノード数：3、代表ノード：超電磁ロボ コン・バトラーV）</option>
+	<option value="12">クラスター12（ノード数：10、代表ノード：幽☆遊☆白書）</option>
+	<option value="13">クラスター13（ノード数：12、代表ノード：キャプテン翼）</option>
+	<option value="14">クラスター14（ノード数：53、代表ノード：ドラえもん）</option>
+	<option value="15">クラスター15（ノード数：20、代表ノード：シャーマンキング）</option>
+	<option value="16">クラスター16（ノード数：17、代表ノード：ポケットモンスター）</option>
+	<option value="17">クラスター17（ノード数：19、代表ノード：はじめの一歩）</option>
+	<option value="18">クラスター18（ノード数：20、代表ノード：コードギアス 反逆のルルーシュ）</option>
+	<option value="19">クラスター19（ノード数：3、代表ノード：超時空要塞マクロス）</option>
+	<option value="20">クラスター20（ノード数：13、代表ノード：おジャ魔女どれみ）</option>
+	<option value="21">クラスター21（ノード数：67、代表ノード：名探偵コナン）</option>
+	<option value="22">クラスター22（ノード数：7、代表ノード：機動戦士ガンダム）</option>
+	<option value="23">クラスター23（ノード数：62、代表ノード：機甲戦記ドラグナー）</option>
+	<option value="24">クラスター24（ノード数：29、代表ノード：灼眼のシャナ）</option>
+	<option value="25">クラスター25（ノード数：2、代表ノード：ARIA）</option>
+	<option value="26">クラスター26（ノード数：2、代表ノード：あずきちゃん）</option>
+	<option value="27">クラスター27（ノード数：2、代表ノード：サムライチャンプルー）</option>
+	<option value="28">クラスター28（ノード数：3、代表ノード：クラッシュギア）</option>
+	<option value="29">クラスター29（ノード数：2、代表ノード：IGPX）</option>
+	<option value="30">クラスター30（ノード数：2、代表ノード：ゲンジ通信あげだま）</option>
+	<option value="31">クラスター31（ノード数：2、代表ノード：あずまんが大王）</option>
+	<option value="32">クラスター32（ノード数：2、代表ノード：おねがい☆ティーチャー）</option>
+	<option value="33">クラスター33（ノード数：9、代表ノード：ジュエルペット）</option>
+	<option value="34">クラスター34（ノード数：3、代表ノード：しゅごキャラ！）</option>
+	<option value="35">クラスター35（ノード数：2、代表ノード：ふしぎ星の☆ふたご姫）</option>
+	<option value="36">クラスター36（ノード数：2、代表ノード：水色時代）</option>
+	<option value="37">クラスター37（ノード数：2、代表ノード：ティアーズ・トゥ・ティアラ）</option>
+	<option value="38">クラスター38（ノード数：2、代表ノード：マクロスF）</option>
+	<option value="39">クラスター39（ノード数：3、代表ノード：ロックマンエグゼ）</option>
+	<option value="40">クラスター40（ノード数：2、代表ノード：六神合体ゴッドマーズ）</option>
+	<option value="41">クラスター41（ノード数：3、代表ノード：宇宙をかける少女）</option>
+
+
+</select>
+
+<div id="d3div"></div>
+
+<script src="//code.jquery.com/jquery.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = $("#d3div").width(),
+    height = 0.95 * window.innerHeight;
+
+var color = d3.scale.category20();
+
+var force = d3.layout.force()
+    .charge(-600)//反発力　-120 -240
+    .linkDistance(200)//自然長　30 120
+    .size([width, height])
+    .gravity(0.05);
+
+//最初の描画用
+screenChange();
+
+// select要素を取得
+function screenChange(){
+
+//削除する(再描画用)
+	d3.select("#d3div").selectAll("svg")
+	    .remove();
+
+//描画する
+	var svg = d3.select("#d3div").append("svg")
+	    .attr("width", width)
+	    .attr("height", height);
+
+	var element = document.getElementById( "target" ) ;
+
+	d3.json("data/cluster_" + element.value + ".txt", function(error, graph) {
+	  if (error) throw error;
+
+	  force
+	      .nodes(graph.nodes)
+	      .links(graph.links)
+	      .start();
+
+	  var link = svg.selectAll(".link")
+	      .data(graph.links)
+	    .enter().append("line")
+	      .attr("class", "link")
+	      .style("stroke-width", function(d) { return d.value-7; });//Math.sqrt(d.value)
+
+	  var node = svg.selectAll(".node")
+	      .data(graph.nodes)
+	    .enter().append("circle")
+	      .attr("class", "node")
+	      .attr("r", function(d) {
+	        return 10 + Math.sqrt(d.Degree)/2;//50
+	      })//20 5
+	      .style("fill", "orange")//function(d) { return color(d.group); }
+	      .call(force.drag);
+
+	  node.append("title")
+	      .text(function(d) { return "制作スタッフが共通するアニメの総数：" + d.Degree + "\n制作スタッフの一覧：\n" + d.staff; });
+
+	  link.append("title")
+	      .text(function(d) { return "共通スタッフの一覧（"+ d.value +"人）：\n" + d.animator; });
+
+	    // nodeのラベル周りの設定
+	  var label = svg.selectAll('text')
+	      .data(graph.nodes)
+	      .enter()
+	      .append('text')
+	      .attr({
+	          "text-anchor":"middle",
+	          "fill":"black",
+	          "font-size": "12px"//9
+	      })
+	      .text(function(d) { return d.name; });//data.label
+
+	  force.on("tick", function() {
+	    link.attr("x1", function(d) { return d.source.x; })
+	        .attr("y1", function(d) { return d.source.y; })
+	        .attr("x2", function(d) { return d.target.x; })
+	        .attr("y2", function(d) { return d.target.y; });
+
+	    node.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; });
+
+    // labelも追随するように
+
+	    label.attr({
+	        x: function(d) { return d.x;},
+	        y: function(d) { return d.y;}
+	    });
+
+	  });
+	});
+}
+
+
+</script>
+
+
+
+</body>
+</html>
