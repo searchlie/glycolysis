@@ -28,12 +28,6 @@ text {
 var width = $("#d3div").width(),
     height = 0.95 * window.innerHeight;
 
-//var force = d3.layout.force()
-//    .charge(-600)//反発力　-120 -240
-//    .linkDistance(200)//自然長　30 120
-//    .size([width, height])
-//    .gravity(0.05);
-
 var svg = d3.select("#d3div").append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -42,7 +36,6 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
 d3.json("data/test.txt", function(error, graph) {
