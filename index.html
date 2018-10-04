@@ -61,9 +61,12 @@ d3.json("data/test.txt", function(error, graph) {
           .on("drag", dragged)
           .on("end", dragended));
 
-  node.append("text")
-  	.attr("dx", 6)
-  	.text(function(d) { return d.id; });
+  var lables = node.append("text")
+      .text(function(d) {
+        return d.id;
+      })
+      .attr('x', 6)
+      .attr('y', 3);
 
   simulation
       .nodes(graph.nodes)
