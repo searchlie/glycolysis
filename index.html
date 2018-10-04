@@ -44,7 +44,7 @@ d3.json("data/test.txt", function(error, graph) {
     .data(graph.nodes)
     .enter().append("circle")
       .attr("r", 5)
-      .attr("fill", orange)
+      .attr("fill", "orange")
       .call(d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
