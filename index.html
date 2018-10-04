@@ -61,16 +61,9 @@ d3.json("data/test.txt", function(error, graph) {
           .on("drag", dragged)
           .on("end", dragended));
 
-  var label = svg.selectAll('text')
-      .data(graph.nodes)
-      .enter()
-      .append('text')
-      .attr({
-          "text-anchor":"middle",
-          "fill":"black",
-          "font-size": "12px"//9
-      })
-      .text(function(d) { return d.id; });
+  node.append("text")
+  	.attr("dx", 6)
+  	.text(function(d) { return d.id; });
 
   simulation
       .nodes(graph.nodes)
