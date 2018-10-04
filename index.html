@@ -36,6 +36,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
 d3.json("data/test.txt", function(error, graph) {
@@ -75,6 +76,9 @@ d3.json("data/test.txt", function(error, graph) {
 
   simulation.force("link")
       .links(graph.links);
+
+  simulation.force("charge")
+      .strength(function() { return -0.1; })
 
   function ticked() {
     link
