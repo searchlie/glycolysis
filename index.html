@@ -57,9 +57,11 @@ d3.json("data/test.txt", function(error, graph) {
 
   var node = svg.append("g")
       .attr("class", "nodes")
-    .selectAll("circle")
+    .selectAll("g")
     .data(graph.nodes)
-    .enter().append("circle")
+    .enter().append("g")
+    
+  var circles = node.append("circle")
       .attr("r", 5)
       .attr("fill", "orange")
       .call(d3.drag()
