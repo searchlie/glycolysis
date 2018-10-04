@@ -78,7 +78,7 @@ d3.json("data/test.txt", function(error, graph) {
       .links(graph.links);
 
   simulation.force("charge")
-      .strength(function() { return -0.1; })
+      .strength(function() { return -10; })
 
   function ticked() {
     link
