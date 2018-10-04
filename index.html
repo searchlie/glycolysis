@@ -22,11 +22,11 @@
 var width = $("#d3div").width(),
     height = 0.95 * window.innerHeight;
 
-var force = d3.layout.force()
-    .charge(-600)//反発力　-120 -240
-    .linkDistance(200)//自然長　30 120
-    .size([width, height])
-    .gravity(0.05);
+//var force = d3.layout.force()
+//    .charge(-600)//反発力　-120 -240
+//    .linkDistance(200)//自然長　30 120
+//    .size([width, height])
+//    .gravity(0.05);
 
 var svg = d3.select("#d3div").append("svg")
     .attr("width", width)
